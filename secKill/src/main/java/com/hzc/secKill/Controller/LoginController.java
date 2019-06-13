@@ -29,7 +29,7 @@ public class LoginController {
 
     @RequestMapping("/do_login")
     @ResponseBody
-    public ResultUtil<Boolean> doLogin(HttpServletResponse response, @Valid LoginVo loginVo) {
+    public ResultUtil<String> doLogin(HttpServletResponse response, @Valid LoginVo loginVo) {
         logger.info(loginVo.toString());
         // 参数校验
 //        String passInput = loginVo.getPassword();
@@ -44,8 +44,8 @@ public class LoginController {
 //            return ResultUtil.error(CodeMsg.MOBILE_ERROR);
 //        }
         // 登录
-        miaoshaUserService.login(response, loginVo);
-        return ResultUtil.success(true);
+        String token = miaoshaUserService.login(response, loginVo);
+        return ResultUtil.success(token);
     }
 
 }

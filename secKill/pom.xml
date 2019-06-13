@@ -11,6 +11,7 @@
 	<groupId>com.hzc</groupId>
 	<artifactId>secKill</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
+    <packaging>jar</packaging>
 	<name>secKill</name>
 	<description>SecondKill project for Spring Boot</description>
 

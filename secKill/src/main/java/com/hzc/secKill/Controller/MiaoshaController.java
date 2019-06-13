@@ -56,7 +56,7 @@ public class MiaoshaController {
             return "miaosha_fail";
         }
         // 减库存->下订单->写入秒杀订单
-        OrderInfo orderInfo = miaoshaService.miaosha(user, goods); // 通过事务保证原子性操作
+        OrderInfo orderInfo = miaoshaService.miaosha(user, goods); // 通过事务保证业务逻辑的一致
         model.addAttribute("orderInfo", orderInfo);
         model.addAttribute("goods", goods);
         return "order_detail";

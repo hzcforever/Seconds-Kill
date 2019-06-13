@@ -102,21 +102,37 @@ public class RedisService {
         return JSON.toJSONString(value);
     }
 
-    private <T> T stringToBean(String s, Class<T> clazz) {
-        if (null == s || s.length() <= 0 || null == clazz) {
+    private <T> T stringToBean(String str, Class<T> clazz) {
+        if(str == null || str.length() <= 0 || clazz == null) {
             return null;
         }
-        if (clazz == int.class || clazz == Integer.class) {
-            return (T) Integer.valueOf(s);
-        } else if (clazz == String.class) {
-            return (T) s;
+        if(clazz == int.class || clazz == Integer.class) {
+            return (T)Integer.valueOf(str);
+        }else if(clazz == String.class) {
+            return (T)str;
+        }else if(clazz == long.class || clazz == Long.class) {
+            return  (T)Long.valueOf(str);
+        }else {
+            return JSON.toJavaObject(JSON.parseObject(str), clazz);
         }
-        return JSON.toJavaObject(JSON.parseObject(s), clazz);
     }
 
     private void returnToPool(Jedis jedis) {
         if (jedis != null) {
             jedis.close();
+        }
+    }
+
+    public boolean delete(KeyPrefix prefix, String key) {
+        Jedis jedis = null;
+        try {
+            jedis = jedisPool.getResource();
+            // 生成真正的 key
+            String realKey = prefix.getPrefix() + key;
+            long res = jedis.del(key);
+            return res > 0;
+        } finally {
+            returnToPool(jedis);
         }
     }
 }
