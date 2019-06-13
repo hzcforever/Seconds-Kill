@@ -28,6 +28,10 @@ public class CodeMsg {
 
     // 订单模块
 
+    // 秒杀模块
+    public static CodeMsg MIAO_SHA_OVER = new CodeMsg(5005000, "商品已经秒杀完毕");
+    public static CodeMsg REPEATE_MIAOSHA = new CodeMsg(5005001, "不能重复秒杀");
+
     public int getCode() {
         return code;
     }

@@ -2,6 +2,7 @@ package com.hzc.secKill.Service;
 
 import com.hzc.secKill.DAO.GoodsDAO;
 import com.hzc.secKill.Domain.GoodsVo;
+import com.hzc.secKill.Domain.MiaoshaGoods;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,5 +20,11 @@ public class GoodsService {
 
     public GoodsVo getGoodVoByGoodsId(long goodsId) {
         return goodsDAO.getGoodVoByGoodsId(goodsId);
+    }
+
+    public void reduceStock(GoodsVo goods) {
+        MiaoshaGoods g = new MiaoshaGoods();
+        g.setGoodsId(goods.getId());
+        goodsDAO.reduceStock(g);
     }
 }
