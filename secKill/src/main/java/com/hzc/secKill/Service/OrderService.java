@@ -5,6 +5,8 @@ import com.hzc.secKill.Domain.GoodsVo;
 import com.hzc.secKill.Domain.MiaoshaOrder;
 import com.hzc.secKill.Domain.MiaoshaUser;
 import com.hzc.secKill.Domain.OrderInfo;
+import com.hzc.secKill.Redis.OrderKey;
+import com.hzc.secKill.Redis.RedisService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,8 +19,13 @@ public class OrderService {
     @Autowired
     OrderDAO orderDAO;
 
-    public MiaoshaOrder getMiaoshaOrderByUserIdGoodsId(Long id, long goodsId) {
-        return orderDAO.getMiaoshaOrderByUserIdGoodsId(id, goodsId);
+    @Autowired
+    RedisService redisService;
+
+    public MiaoshaOrder getMiaoshaOrderByUserIdGoodsId(Long userId, long goodsId) {
+//        return orderDAO.getMiaoshaOrderByUserIdGoodsId(userId, goodsId);
+        return redisService.get(OrderKey.getMiaoshaOrderByUidGid, "" + userId + "_" + goodsId,
+                MiaoshaOrder.class);
     }
 
     @Transactional
@@ -34,11 +41,19 @@ public class OrderService {
         orderInfo.setStatus(0);
         orderInfo.setUserId(user.getId());
         long orderId = orderDAO.insert(orderInfo);
-        MiaoshaOrder miaoshaOrder = new MiaoshaOrder();
+        MiaoshaOrder miaoshaOrder = new MiaoshaOrder(); // 通过建立唯一索引保证不会卖超，否则回滚
         miaoshaOrder.setGoodsId(goods.getId());
         miaoshaOrder.setOrderId(orderId);
         miaoshaOrder.setUserId(user.getId());
         orderDAO.insertMiaoshaOrder(miaoshaOrder);
+
+        redisService.set(OrderKey.getMiaoshaOrderByUidGid, "" + user.getId() + "_" +
+                goods.getId(), miaoshaOrder);
+
         return orderInfo;
+    }
+
+    public OrderInfo getOrderById(long orderId) {
+        return orderDAO.getOrderById(orderId);
     }
 }

@@ -2,6 +2,7 @@ package com.hzc.secKill.Controller;
 
 
 import com.hzc.secKill.Domain.User;
+import com.hzc.secKill.RabbitMQ.MQSender;
 import com.hzc.secKill.Redis.RedisService;
 import com.hzc.secKill.Redis.UserKey;
 import com.hzc.secKill.Result.CodeMsg;
@@ -68,6 +69,16 @@ public class DemoController {
         user.setName("HuangZiChen");
         boolean val = redisService.set(UserKey.getById, "" + 111, user);
         return ResultUtil.success(val);
+    }
+
+    @Autowired
+    MQSender sender;
+
+    @RequestMapping("/mq")
+    @ResponseBody
+    public ResultUtil<String> mq() {
+        sender.send("I am HuangZiChen!");
+        return ResultUtil.success("Hello, hzc.");
     }
 
 }

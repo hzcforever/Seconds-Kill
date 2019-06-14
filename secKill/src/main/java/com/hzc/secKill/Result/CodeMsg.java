@@ -27,6 +27,7 @@ public class CodeMsg {
     // 商品模块
 
     // 订单模块
+    public static CodeMsg ORDER_NOT_EXIST = new CodeMsg(5004000, "订单不存在");
 
     // 秒杀模块
     public static CodeMsg MIAO_SHA_OVER = new CodeMsg(5005000, "商品已经秒杀完毕");
