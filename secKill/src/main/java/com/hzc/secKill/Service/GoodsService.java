@@ -22,9 +22,19 @@ public class GoodsService {
         return goodsDAO.getGoodVoByGoodsId(goodsId);
     }
 
-    public void reduceStock(GoodsVo goods) {
+    public boolean reduceStock(GoodsVo goods) {
         MiaoshaGoods g = new MiaoshaGoods();
         g.setGoodsId(goods.getId());
-        goodsDAO.reduceStock(g);
+        int res = goodsDAO.reduceStock(g);
+        return res > 0;
+    }
+
+    public void resetStock(List<GoodsVo> goodsList) {
+        for(GoodsVo goods : goodsList ) {
+            MiaoshaGoods g = new MiaoshaGoods();
+            g.setGoodsId(goods.getId());
+            g.setStockCount(goods.getStockCount());
+            goodsDAO.resetStock(g);
+        }
     }
 }

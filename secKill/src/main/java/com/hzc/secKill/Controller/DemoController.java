@@ -74,24 +74,24 @@ public class DemoController {
     @Autowired
     MQSender sender;
 
-    @RequestMapping("/mq")
-    @ResponseBody
-    public ResultUtil<String> mq() {
-        sender.send("I am HuangZiChen!");
-        return ResultUtil.success("Hello, hzc.");
-    }
+//    @RequestMapping("/mq")
+//    @ResponseBody
+//    public ResultUtil<String> mq() {
+//        sender.send("I am HuangZiChen!");
+//        return ResultUtil.success("Hello, hzc.");
+//    }
 
-    @RequestMapping("/mq_topic")
-    @ResponseBody
-    public ResultUtil<String> mqTopic() {
-        sender.sendTopic("hahaha!");
-        return ResultUtil.success("hello, haha");
-    }
+//    @RequestMapping("/mq_topic")
+//    @ResponseBody
+//    public ResultUtil<String> mqTopic() {
+//        sender.sendTopic("hahaha!");
+//        return ResultUtil.success("hello, haha");
+//    }
 
-    @RequestMapping("mq_fanout")
-    @ResponseBody
-    public ResultUtil<String> mqFanout() {
-        sender.sendFanout("xixixi!");
-        return ResultUtil.success("hello xixi");
-    }
+//    @RequestMapping("mq_fanout")
+//    @ResponseBody
+//    public ResultUtil<String> mqFanout() {
+//        sender.sendFanout("xixixi!");
+//        return ResultUtil.success("hello xixi");
+//    }
 }

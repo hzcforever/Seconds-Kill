@@ -12,6 +12,12 @@ public class MQConfig {
     public static final String TOPIC_QUEUE2 = "topic.queue2";
     public static final String TOPIC_EXCHANGE = "topicExchange";
     public static final String FANOUT_EXCHANGE = "fanoutExchange";
+    public static final String MIAOSHA_QUEUE = "miaosha.queue";
+
+    @Bean
+    public Queue miaoshaQueue() {
+        return new Queue(MIAOSHA_QUEUE, true);
+    }
 
     /**
      * Direct 模式

@@ -30,6 +30,7 @@ public class OrderService {
 
     @Transactional
     public OrderInfo createOrder(MiaoshaUser user, GoodsVo goods) {
+        // 生成订单
         OrderInfo orderInfo = new OrderInfo();
         orderInfo.setCreateDate(new Date());
         orderInfo.setDeliveryAddrId(0l);
@@ -40,10 +41,11 @@ public class OrderService {
         orderInfo.setOrderChannel(1);
         orderInfo.setStatus(0);
         orderInfo.setUserId(user.getId());
-        long orderId = orderDAO.insert(orderInfo);
+        orderDAO.insert(orderInfo);
+        // 生成秒杀订单
         MiaoshaOrder miaoshaOrder = new MiaoshaOrder(); // 通过建立唯一索引保证不会卖超，否则回滚
         miaoshaOrder.setGoodsId(goods.getId());
-        miaoshaOrder.setOrderId(orderId);
+        miaoshaOrder.setOrderId(orderInfo.getId());
         miaoshaOrder.setUserId(user.getId());
         orderDAO.insertMiaoshaOrder(miaoshaOrder);
 
@@ -55,5 +57,10 @@ public class OrderService {
 
     public OrderInfo getOrderById(long orderId) {
         return orderDAO.getOrderById(orderId);
+    }
+
+    public void deleteOrders() {
+        orderDAO.deleteOrders();
+        orderDAO.deleteMiaoshaOrders();
     }
 }
