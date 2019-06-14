@@ -81,4 +81,17 @@ public class DemoController {
         return ResultUtil.success("Hello, hzc.");
     }
 
+    @RequestMapping("/mq_topic")
+    @ResponseBody
+    public ResultUtil<String> mqTopic() {
+        sender.sendTopic("hahaha!");
+        return ResultUtil.success("hello, haha");
+    }
+
+    @RequestMapping("mq_fanout")
+    @ResponseBody
+    public ResultUtil<String> mqFanout() {
+        sender.sendFanout("xixixi!");
+        return ResultUtil.success("hello xixi");
+    }
 }
