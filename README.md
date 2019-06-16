@@ -8,7 +8,7 @@
 - [明文密码两次 MD5 加密](#明文密码两次-MD5-加密)
 - [分布式 Session](#分布式-Session)
 - [秒杀功能开发](#秒杀功能开发)
-- [第一次压力测试](#第一次压力测试)
+- [第一次压测](#第一次压测)
 	- [Jmeter 快速入门](#Jmeter-快速入门)
 	- [自定义变量模拟多用户](#自定义变量模拟多用户) 
 	- [命令行压测](#命令行压测)
@@ -22,7 +22,7 @@
 	- [集成 RabbitMQ](#集成-RabbitMQ)
 	- [Redis 预减库存](#Redis-预减库存)
 	- [RabbitMQ 异步下单](#RabbitMQ-异步下单)
-- [第二次压力测试](#第二次压力测试)
+- [第二次压测](#第二次压测)
 - [写在最后](#写在最后)
 
 ## 项目的基本配置及背景
@@ -48,5 +48,46 @@
 这样处理以后，我们的应用是可以很简单的进行分布式横向扩展的，以应对更大的并发。
 
 ## 明文密码两次 MD5 加密
+
+通过两次 MD5 加密提高数据校验的安全性。第一次 MD5 是防止用户的明文密码在网络上传输，第二次 MD5 是防止网上相关的 MD5 解密反查。
+
+第一次 MD5 加密：用户端：password = MD5(明文 + 固定 salt -> "1a2b3c4d")
+
+第二次 MD5 加密：password = MD5(用户端输入 + 随机 salt)
+
+数据库中 user 表里插入的即为第二次加密的密码和随机 salt。
+
+## 分布式 Session
+
+每次登录都会生成一个 token 并把它加入到 Cookie 中，在跳转不同页面时，会把 token 对应的 user 从 Redis 中取出。
+
+改进：通过 UserArgumentResolver 封装之前加入 Cookie、由 token 得到 user 等一系列操作。
+
+    public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
+        webRequest.getNativeRequest();
+        HttpServletRequest request = webRequest.getNativeRequest(HttpServletRequest.class);
+        HttpServletResponse response = webRequest.getNativeResponse(HttpServletResponse.class);
+    
+        String paramToken = request.getParameter(MiaoshaUserService.COOKIE_NAME_TOKEN);
+        String cookieToken = getCookieValue(request, MiaoshaUserService.COOKIE_NAME_TOKEN);
+        if (StringUtils.isEmpty(cookieToken) && StringUtils.isEmpty(paramToken)) {
+            return null;
+        }
+        String token = StringUtils.isEmpty(paramToken) ? cookieToken : paramToken;
+        return userService.getByToken(response, token);
+    }
+
+## 秒杀功能开发
+
+**主要思路：**
+
+1. 首先判断秒杀商品的库存，如果小于等于0，则直接返回秒杀失败
+2. 判断是否已经秒杀到了商品，即从数据库中查看该用户是否已经存在对应商品的订单，如果有则重复秒杀
+3. 减库存
+4. 生成订单(order_info + miaosha_order)
+
+但存在一些问题，比如高并发下存在的超卖问题，以及怎样有效地减少大量对数据库访问的请求...
+
+## 第一次压测
 
 待更...
