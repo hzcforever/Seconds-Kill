@@ -89,7 +89,7 @@
 
 ### Jmeter 快速入门
 
-在 [jmeter 官网](jmeter.apache.org) 下载“.tgz”结尾的安装包在虚拟机 CentOS 7(带桌面系统) 安装，下载“.zip”结尾的压缩包在本机 windows 10 环境下安装，具体安装过程可自行百度，
+在 [jmeter 官网](https://jmeter.apache.org/download_jmeter.cgi) 下载“.tgz”结尾的安装包在虚拟机 CentOS 7(带桌面系统) 安装，下载“.zip”结尾的压缩包在本机 windows 10 环境下安装，具体安装过程可自行百度，
 
 在虚拟机上安装的 jmeter 通过在 bin 文件夹下输入命令行 ./jmeter.sh 运行 jmeter；在 windows 上安装的 jmeter 通过在打开 bin 文件夹下的 jmeter.bat 文件运行 jmeter。
 
