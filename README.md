@@ -261,7 +261,7 @@
 3. 通过 RabbitMQ 将用户请求入队缓冲，实现异步下单，增强用户体验
 4. 第二次压测
 
-### 集成 Rabbit MQ
+### 集成 RabbitMQ
 
 RabbitMQ 是采用 Erlang 语言实现 AMQP（Advanced Message Queuing Protocol，高级消息队列协议）的消息中间件，它最初起源于金融系统，用于在分布式系统中存储转发消息。
 
