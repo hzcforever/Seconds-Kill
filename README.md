@@ -11,7 +11,7 @@
 - [第一次压测](#第一次压测)
 	- [Jmeter 快速入门](#Jmeter-快速入门)
 	- [自定义变量模拟多用户](#自定义变量模拟多用户) 
-	- [命令行压测](#命令行压测)
+	- [商品查询与秒杀下单压测](#商品查询与秒杀下单压测)
 - [页面级高并发秒杀优化](#页面级高并发秒杀优化)
 	- [商品列表页缓存实现](#商品列表页缓存实现) 
 	- [热点数据对象缓存](#热点数据对象缓存)
@@ -89,5 +89,67 @@
 但存在一些问题，比如高并发下存在的超卖问题，以及怎样有效地减少大量对数据库访问的请求...
 
 ## 第一次压测
+
+### Jmeter 快速入门
+
+在 [jmeter 官网](jmeter.apache.org) 下载“.tgz”结尾的安装包在虚拟机 CentOS 7(带桌面系统) 安装，下载“.zip”结尾的压缩包在本机 windows 10 环境下安装，具体安装过程可自行百度，
+
+在虚拟机上安装的 jmeter 通过在 bin 文件夹下输入命令行 ./jmeter.sh 运行 jmeter；在 windows 上安装的 jmeter 通过在打开 bin 文件夹下的 jmeter.bat 文件运行 jmeter。
+
+**线程组**
+
+测试计划 -> 添加 -> Threads -> 线程组
+
+本项目设置线程数为5000，循环次数为10，即总共50000个并发。
+
+**HTTP 请求默认值**
+
+线程组 -> 配置元件 -> HTTP 请求默认值
+
+协议：http
+
+服务器名称或IP：虚拟机的 IP
+
+端口号：8080
+
+**HTTP请求**
+
+线程组 -> Sample -> HTTP请求
+
+方法：GET
+
+路径：本项目中用到了 /goods/to_list(商品查询) 和 /miaosha/do_miaosha(秒杀下单) 两个路径
+
+**聚合报告**
+
+线程组 -> 监听器 -> 聚合报告
+
+显示压测的具体情况，包括并发量、Error、QPS 等信息。
+
+### 自定义变量模拟多用户
+
+**Jmeter 自定义变量**
+
+线程组 -> 配置元件 -> CSV Data Set Config
+
+通过配置文件模拟多用户 token 访问页面，实现秒杀订单。
+
+配置文件格式为：userId,token
+
+在 HTTP 请求页中添加参数 token(参数名称)，参数值用 ${token} 作为变量的引用，最后开始压测。
+
+### 商品查询与秒杀下单压测
+
+压测环境是 VMware 虚拟机，系统为 CentOS 7，2G 内存，CPU 两个 processor。
+
+商品查询压测结果：/goods/to_list
+
+<div align="center"><img src="/img//first_to_list.png" width=""/></div>
+
+秒杀下单压测结果：/miaosha/do_miaosha
+
+<div align="center"><img src="/img//first_do_miaosha.png" width=""/></div>
+
+## 页面级高并发秒杀优化
 
 待更...
